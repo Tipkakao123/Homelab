@@ -1,0 +1,14 @@
+# --- credentials & environment files ---
+.env
+*.env
+
+# --- ssh keys ---
+id_rsa*
+*.pem
+*.key
+
+# --- config files with embedded secrets ---
+rclone.conf
+
+# --- anything explicitly secret ---
+secrets/
