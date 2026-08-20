@@ -60,5 +60,4 @@ Both `ssh pve` and `ssh textboxer` resolve and connect from a cold laptop - fres
 
 ## Not done yet
 
-- `textboxer` is a laptop: `systemd-logind`'s `HandleLidSwitch` still defaults to suspend, so a closed lid takes it offline. Separate AC/battery settings needed in `/etc/systemd/logind.conf`.
 - Estate is two hosts on a flat `/24`. No VLAN segmentation yet - that's the MikroTik want, not started.
