@@ -9,7 +9,7 @@ Hands-on homelab documenting my build toward Linux/infrastructure work — testi
 | textboxer | ThinkPad lab workstation - CLI-only, headless over SSH; runs labs and experiments | Arch Linux | live |
 | fujitsu | Proxmox VE host - virtualisation estate and the platform for my bachelor thesis | Proxmox VE 9 (Debian 13) | live |
 
-Both boxes run headless and are administered over SSH. Build notes: [textboxer](docs/textboxer.md), [fujitsu](docs/fujitsu.md).
+Both boxes run headless and are administered over SSH. Build notes: [textboxer](docs/textboxer.md), [fujitsu](docs/fujitsu.md), [network](docs/network.md).
 
 ## Running services
 
