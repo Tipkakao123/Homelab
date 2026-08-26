@@ -1,4 +1,4 @@
-# network - addressing the estate and one real diagnosis
+# network - addressing and a wifi diagnosis
 
 Two hosts, one flat network, done properly this time. This documents the addressing decisions and the wifi failure that came with them - a diagnosis, not just a working config.
 
@@ -12,7 +12,7 @@ Two hosts, one flat network, done properly this time. This documents the address
 
 ## Addressing decisions
 
-**A static band, not per-device reservations.** Both approaches stop an address from drifting. A reservation lives in the router's binding table - it's centralised and nice to browse, but it means every future static device needs a trip into the router UI, and the convention only exists if you remember to look. Narrowing the router's own DHCP pool to `.100-.254` states the convention once, in one place, and it holds even for a device that's never touched the router's admin page. `.2-.99` is now simply "infrastructure lives here" - no lookup required.
+**A static band, not per-device reservations.** Both approaches stop an address from drifting. A reservation lives in the router's binding table - it's centralised and nice to browse, but it means every future static device needs a trip into the router UI, and the convention only exists if you remember to look. Narrowing the router's own DHCP pool to `.100-.254` states the convention once, in one place, and it holds even for a device that's never touched the router's admin page. `.2-.99` is now simply "infrastructure lives here".
 
 **Static on the host, not a reservation on the router, for the same reason fujitsu already settled this one:** both give a stable address; they differ in where the truth lives. A reservation makes the host's identity depend on the router being up and correctly configured at boot. A server should know who it is without asking. For two boxes I administer over SSH, static wins on both.
 
@@ -36,7 +36,7 @@ nmcli con mod <profile> ipv4.addresses "192.168.3.11/24, 192.168.3.1"
 
 That one line rules things out faster than guessing does. Getting as far as the 4-way handshake means the access point was found, the SSID matched, and cipher negotiation succeeded - the whole WPA3/SAE-incompatibility theory dies right there, before touching a single router setting. A handshake failure that specifically reports a PSK mismatch means the credential is wrong, not the protocol.
 
-**Cause.** A typo in the new PSK, sitting in a stale connection profile. Not more interesting than that - which is the point. A portfolio of only clean successes reads as fiction; this one took minutes to find because the log said exactly what was wrong, against the hour it would have taken reconfiguring the router on a wrong theory.
+**Cause.** A typo in the new PSK, sitting in a stale connection profile. Not more interesting than that - which is the point. This one took minutes to find because the log said exactly what was wrong, against the hour it would have taken reconfiguring the router on a wrong theory.
 
 **Fix.** Deleted the stale profile and reconnected with the corrected PSK.
 
@@ -52,7 +52,7 @@ nmcli con mod <profile> wifi-sec.psk-flags 0
 
 ## Naming - WSL and the generated hosts file
 
-Wanted `ssh pve` and `ssh textboxer` to resolve from inside WSL, the same as from Windows. Editing WSL's own `/etc/hosts` directly didn't stick - WSL regenerates that file from the Windows hosts file on every start (`generateHosts` in `wsl.conf` can turn that off, but disabling it turns into a maintenance burden: every DNS/network change in Windows now has to be re-applied by hand). Editing a generated file is fighting the tool. The names went into the actual source instead: `C:\Windows\System32\drivers\etc\hosts`, which propagates into WSL and also resolves the names in the Windows-side browser for the Proxmox web UI. Host+user mapping (`ssh pve` instead of `ssh root@192.168.3.10`) lives in `~/.ssh/config`, permissions `600`.
+Wanted `ssh pve` and `ssh textboxer` to resolve from inside WSL, the same as from Windows. Editing WSL's own `/etc/hosts` directly didn't stick - WSL regenerates that file from the Windows hosts file on every start (`generateHosts` in `wsl.conf` can turn that off, but disabling it turns into a maintenance burden: every DNS/network change in Windows now has to be re-applied by hand). The names went into the actual source instead: `C:\Windows\System32\drivers\etc\hosts`, which propagates into WSL and also resolves the names in the Windows-side browser for the Proxmox web UI. Host+user mapping (`ssh pve` instead of `ssh root@192.168.3.10`) lives in `~/.ssh/config`, permissions `600`.
 
 ## Verification
 
@@ -60,4 +60,4 @@ Both `ssh pve` and `ssh textboxer` resolve and connect from a cold laptop - fres
 
 ## Not done yet
 
-- Estate is two hosts on a flat `/24`. No VLAN segmentation yet - that's the MikroTik want, not started.
+- No segmentation - one flat `/24`, one broadcast domain. The narrowed DHCP pool gives predictable addressing, not isolation: any host can reach any other. This starts to matter with the first guests, where VM traffic sits on the same L2 as the host's management interface. The fix is a management VLAN separated from workloads and from household devices, which needs 802.1Q-capable kit. A MikroTik is the plan - fully configurable, and the usual recommendation for learning networking hands-on rather than the minimum box that would do the job. Not bought yet.
