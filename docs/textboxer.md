@@ -12,7 +12,7 @@ Installed the base system with `pacstrap` (`base`, `linux`, `linux-firmware`), t
 
 Generated the fstab, which confused me at first — until I understood it's the table the system reads at every boot to know which partition mounts where. Without it, no working system. Set locale to English system messages (`LANG=en_US.UTF-8`) on an Estonian keyboard (`KEYMAP=et`), set the root password, created my user, hostname `textboxer`.
 
-## Snag 1 — GRUB refused to install
+## Problem 1 — GRUB refused to install
 
 **Symptom:** `grub-install` failed, complaining it couldn't find the EFI directory.
 
@@ -31,7 +31,7 @@ then generated the config with `grub-mkconfig`, successfully.
 **Lesson:** 
 Tools ship with default assumptions — verify them against your actual layout instead of assuming they fit.
 
-## Snag 2 — first boot, network dead
+## Problem 2 — first boot, network dead
 
 **Symptom:** after rebooting into the installed system, no connectivity. All interfaces down, and `ping` returned `temporary failure in name resolution`.
 

@@ -24,7 +24,7 @@ nmcli con mod <profile> ipv4.addresses "192.168.3.11/24, 192.168.3.1"
 
 `ipv4.addresses` is a list property - it takes CIDR addresses, comma-separated if there's more than one. It has no concept of "and here's the gateway." Applied as written, NetworkManager would have tried to assign the router's own address, `192.168.3.1`, to the laptop as a second address on the same interface - a duplicate-address conflict on the one machine every other device on the network depends on to route anywhere. That's not "textboxer loses wifi," that's "the flat loses internet" until someone finds the laptop and disconnects it. Caught before applying, by reading what the property actually expects rather than assuming a space-separated shorthand still worked. The gateway is a separate property, `ipv4.gateway`, and the older combined syntax was removed from NetworkManager for exactly this reason - it let two different concepts collapse into one string.
 
-## Snag - wifi wouldn't reconnect after the household PSK got changed
+## Problem - wifi wouldn't reconnect after the household PSK got changed
 
 **Symptom.** textboxer came back up asking for wifi secrets on every attempt. `nmcli device wifi connect` kept failing with no more detail than "secrets required."
 

@@ -25,7 +25,7 @@ The address was derived rather than invented: keep the netmask and gateway the i
 
 Interface names were pinned at install time rather than left to predictable-naming drift.
 
-## Snag - `apt-get update` fails on a brand-new install
+## Problem - `apt-get update` fails on a brand-new install
 
 **Symptom.** The first update task failed in the web UI with:
 
@@ -43,6 +43,10 @@ That message is useless on its own. 100 is apt's generic failure code, and the G
 
 One habit kept from this: if a kernel was installed, check `uname -r` before and after the reboot. Installing a kernel and continuing to run the old one is a quiet and common mistake.
 
+## Storage
+
+The 2 TB USB disk that serves as the data tier is documented separately: [labs/usb-data-tier.md](../labs/usb-data-tier.md).
+
 ## Verification
 
 Headless operation was tested rather than assumed. Monitor and keyboard unplugged, cold boot, then SSH straight in from the laptop - no console login needed first. That confirms the thing worth understanding: systemd starts enabled services at boot regardless of whether anyone logs in, and the console login prompt is just another service, not a precondition for the machine being up.
@@ -51,5 +55,6 @@ Headless operation was tested rather than assumed. Monitor and keyboard unplugge
 
 - First guests: a Debian VM and an LXC container, the container created from the CLI
 - Snapshot rollback drill, and a `vzdump` backup restored *and booted* - a snapshot is not a backup
-- The 2 TB USB disk mounted by UUID via fstab and passed into a container, proven by an unattended reboot
+- The 2 TB USB disk passed into a container as a bind mount - the host-side mount is done and reboot-proven, the container half is not
+- Confirm the USB 3.0 connector stays fully seated; it silently fell back to 480M once
 - Both hosts monitored from textboxer
