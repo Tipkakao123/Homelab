@@ -1,6 +1,6 @@
 # Homelab
 
-Hands-on homelab documenting my build toward Linux/infrastructure work — testing and working with different tools, and first attempts at implementing my bachelor thesis infrastructure. Failures and learnings included, for my future self.
+Hands-on homelab documenting my build toward Linux/infrastructure work - testing and working with different tools, and first attempts at implementing my bachelor thesis infrastructure. Failures and learnings included, for my future self.
 
 ## Estate
 
