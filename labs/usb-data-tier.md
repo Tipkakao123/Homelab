@@ -6,7 +6,7 @@ Making an external USB disk behave like an internal one: partitioned, formatted,
 
 This disk acts as my main storage for photos and videos. This is its only purpose - act as my "cloud" storage, a Google Photos alternative. The reason it is USB and not internal has only to do with pricing: recent price hikes have finally reached hard drives as well, and it was cheaper to get an external drive than an internal one.
 
-The numbers I bought against, in Estonia in July 2026, when NAND had risen 100-200% in a few months on AI datacentre demand and the rise had spread to mechanical drives too:
+The numbers I bought against, in Estonia in July 2026, when storage prices had risen sharply on AI datacentre demand and the rise had spread to mechanical drives too:
 
 | Option | Price | Availability |
 |---|---|---|
@@ -60,7 +60,7 @@ usb 1-3: device not accepting address 4, error -71
 usb usb1-port3: unable to enumerate USB device
 ```
 
-`full-speed` is the clue that cracked it. Full-speed is USB 1.1, 12 Mbit/s. This is a USB 3.0 drive, so it should come up as SuperSpeed, or high-speed at worst. Coming up at full-speed means the kernel could not establish the faster signalling at all, and that is a physical layer problem rather than a configuration one. `-71` is `-EPROTO`, a protocol error: the kernel asked for the device descriptor and did not get a valid answer back. It tried five times, ran its own port power cycle, and gave up.
+`full-speed` is the clue that cracked it. Full-speed is USB 1.1, 12 Mbit/s. This is a USB 3.0 drive, so it should come up as SuperSpeed, or high-speed at worst. Coming up at full-speed means the kernel could not establish the faster signalling at all, and that is a physical layer problem rather than a configuration one. `-71` is `-EPROTO`, a protocol error: the kernel asked for the device descriptor and did not get a valid answer back. It retried, power-cycled the port, and gave up.
 
 After reseating the cable the device enumerated cleanly and spun up:
 

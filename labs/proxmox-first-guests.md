@@ -50,7 +50,7 @@ degraded
 
 Three failures, and all three are `.mount` units. Not a service, not networking - every one of them is systemd calling `mount()` and being refused.
 
-**Cause.** I chose `--unprivileged 1` deliberately. In a privileged container, root inside is effectively root on the host as far as the kernel is concerned. An unprivileged container maps container-root to an unprivileged UID on the host instead, so a breakout gets you nobody. The cost of that choice is exactly what I was looking at: that UID has no business mounting kernel filesystems, so systemd 257 could not set up the mounts it wanted.
+**Cause.** I chose `--unprivileged 1` deliberately. In a privileged container, root inside is effectively root on the host as far as the kernel is concerned. An unprivileged container maps container-root to an unprivileged UID on the host instead, so a breakout lands as an unprivileged host user. The cost of that choice is exactly what I was looking at: that UID has no business mounting kernel filesystems, so systemd 257 could not set up the mounts it wanted.
 
 **Fix.**
 
@@ -68,7 +68,7 @@ pct stop 100 && pct start 100
 running
 ```
 
-**What nesting actually does, and what it does not.** It permits the container to create its own nested namespaces and mount filesystems inside them. It does **not** change the UID mapping - container-root is still an unprivileged nobody on the host, and it still cannot touch host filesystems. So `tmp.mount` succeeds because the container may now mount a tmpfs in its own mount namespace, which was always harmless and was blocked as collateral damage from a blanket restriction. Enabling it did not undo the reason I picked unprivileged in the first place.
+**What nesting actually does, and what it does not.** It permits the container to create its own nested namespaces and mount filesystems inside them. It does **not** change the UID mapping - container-root is still an unprivileged user on the host, and it still cannot touch host filesystems. So `tmp.mount` succeeds because the container may now mount a tmpfs in its own mount namespace, which was always harmless and was blocked as collateral damage from a blanket restriction. Enabling it did not undo the reason I picked unprivileged in the first place.
 
 **Lesson.** Picking the more restrictive option means meeting its costs, and the useful part is meeting them knowingly. I predicted before testing that whatever failed would be something the container was not allowed to do to the kernel, and all three failures were mounts. Being right about the class of failure is worth more than the fix, because the fix is one line in a wiki and the reasoning transfers.
 

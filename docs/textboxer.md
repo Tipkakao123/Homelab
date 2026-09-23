@@ -1,5 +1,7 @@
 # textboxer - manual Arch Linux build
 
+*This is the June 2026 Arch build. The box has since been reinstalled and now runs Ubuntu; the lessons below are why it was worth doing by hand once.*
+
 A spare ThinkPad that was lying around doing nothing. After experimenting with different Linux flavours I landed on what I actually needed: a CLI-only host for practicing Linux on the command line, working toward the LFCS certification. The box is deliberately disposable - if something breaks, I fix it or reinstall without any risk to the future Proxmox host. Built by hand, June 2026, while sick.
 
 ## The build
